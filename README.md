@@ -86,17 +86,17 @@ dsh plugin --profile web remove dsh-init
 - **CLAUDE.md 变更**：因为 AGENTS.md 是软链，改 CLAUDE.md 即同时生效于两边，永远不需要改两份。
 - **更新插件**：本地路径安装是软链，改完仓库代码重启 DSH 即生效；GitHub/npm 安装则重新执行一次 `dsh plugin add <spec>` 更新到新版本。
 
-## 发布新版本（本地自动化）
+## 发布新版本（GitHub Actions 自动化）
 
-本仓库配置了一条命令的本地发布流水线：
+发布由 GitHub Actions 全自动完成（与 [dsh-mermaid-zoom](https://github.com/evanfang0054/dsh-mermaid-zoom) 同一套模式）：推送 `v*` tag 触发流水线——语法检查 → 插件加载冒烟测试 → `npm publish`（token 取自仓库 secret `NPM_TOKEN`）。也支持在 Actions 页面手动触发（workflow_dispatch）。
 
 ```bash
-npm run release
+npm run release        # = npm version patch（bump + commit + tag）+ git push --follow-tags
 ```
 
-等价于：`npm version patch`（bump 版本 + git commit + tag）→ `npm publish`（自动触发 `prepublishOnly` 加载校验，走 `publishConfig` 指定的官方源）→ `git push --follow-tags`。
+推完 tag 后 CI 自动发布到 npm，进度见仓库 Actions 页。
 
-前置条件：`~/.npmrc` 中配置官方源的 token（`//registry.npmjs.org/:_authToken=...`，仓库外的用户级配置，切勿提交进仓库）。
+> 前置配置（仓库维护者）：`gh secret set NPM_TOKEN --body <npm token>`，token 与 `~/.npmrc` 无关，仅存于 GitHub 仓库 secret。
 
 ## License
 

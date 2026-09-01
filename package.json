@@ -25,6 +25,18 @@
     "coding-agent"
   ],
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/evanfang0054/dsh-init.git"
+  },
+  "scripts": {
+    "prepublishOnly": "node -e \"import('./lib/index.js').then(m => { if (m.name !== 'dsh-init' || typeof m.apply !== 'function' || !Array.isArray(m.inject)) { console.error('plugin exports invalid'); process.exit(1); } console.log('plugin load OK:', m.name); }).catch(e => { console.error(e); process.exit(1); })\"",
+    "release": "npm version patch && npm publish && git push --follow-tags"
+  },
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/",
+    "access": "public"
+  },
   "dsh": {
     "bundle": {
       "patch": "./cordis.patch.yml"

@@ -1,5 +1,7 @@
 # dsh-init
 
+[GitHub](https://github.com/evanfang0054/dsh-init) · [npm](https://www.npmjs.com/package/dsh-init)
+
 给 [DeepSeek Harness（DSH）](https://github.com/deepseek-ai/deepseek-harness) 加上 Claude Code 风格的 **`/init` 命令**的官方机制插件（profile bundle）。
 
 安装后，对 agent 说 `/init` 即可通过「访谈 → 侦查代码库 → 补缺口 → 写文件」的工作流生成：
@@ -32,14 +34,14 @@ Claude Code 的 `/init` 没有一行"生成逻辑"——它是 `type: 'prompt'` 
 本包是一个标准的 **DSH profile bundle**（`package.json` 声明 `dsh.bundle.patch`，与官方 `@deepseek-ai/dsh-base`、社区 `dsh-context` 等插件同一机制）。用 DSH 自带的 `dsh plugin` 命令安装（内部转发 pnpm，并把本包加入 profile 的 bundle 层）：
 
 ```bash
-# 从本地仓库安装（web profile；GUI 部署的默认 profile）
-dsh plugin --profile web add /path/to/dsh-init
-
-# 或从 GitHub 安装（推送到 GitHub 后）
-dsh plugin --profile web add github:<your-name>/dsh-init
-
-# 或发布到 npm 后
+# 方式一：从 npm 安装（推荐）
 dsh plugin --profile web add dsh-init
+
+# 方式二：从 GitHub 安装
+dsh plugin --profile web add github:evanfang0054/dsh-init
+
+# 方式三：从本地仓库安装（web profile；GUI 部署的默认 profile）
+dsh plugin --profile web add /path/to/dsh-init
 ```
 
 然后**重启 DSH**（bundle 层在进程启动时加载）。
@@ -83,6 +85,18 @@ dsh plugin --profile web remove dsh-init
 - **已有 AGENTS.md**：工作流绝不静默覆盖——会先 diff，再经用户确认，可选备份为 `AGENTS.md.bak`。
 - **CLAUDE.md 变更**：因为 AGENTS.md 是软链，改 CLAUDE.md 即同时生效于两边，永远不需要改两份。
 - **更新插件**：本地路径安装是软链，改完仓库代码重启 DSH 即生效；GitHub/npm 安装则重新执行一次 `dsh plugin add <spec>` 更新到新版本。
+
+## 发布新版本（本地自动化）
+
+本仓库配置了一条命令的本地发布流水线：
+
+```bash
+npm run release
+```
+
+等价于：`npm version patch`（bump 版本 + git commit + tag）→ `npm publish`（自动触发 `prepublishOnly` 加载校验，走 `publishConfig` 指定的官方源）→ `git push --follow-tags`。
+
+前置条件：`~/.npmrc` 中配置官方源的 token（`//registry.npmjs.org/:_authToken=...`，仓库外的用户级配置，切勿提交进仓库）。
 
 ## License
 

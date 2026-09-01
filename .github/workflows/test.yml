@@ -1,0 +1,21 @@
+name: Test
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    name: 语法与加载检查
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: node --check lib/index.js
+      - name: 插件加载冒烟测试
+        run: node -e "import('./lib/index.js').then(m => { if (m.name !== 'dsh-init' || typeof m.apply !== 'function' || !Array.isArray(m.inject)) process.exit(1); console.log('plugin load OK:', m.name); }).catch(e => { console.error(e); process.exit(1); })"
+      - name: manifest 完整性
+        run: node -e "const p=require('./package.json'); if(!p.name||!p.version||!p.license||!p.dsh.bundle.patch) process.exit(1); const f=require('fs'); if(!f.existsSync(p.dsh.bundle.patch)) process.exit(1); console.log('manifest OK:', p.name, p.version)"

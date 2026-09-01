@@ -29,6 +29,10 @@
     "type": "git",
     "url": "git+https://github.com/evanfang0054/dsh-init.git"
   },
+  "bugs": {
+    "url": "https://github.com/evanfang0054/dsh-init/issues"
+  },
+  "homepage": "https://github.com/evanfang0054/dsh-init#readme",
   "scripts": {
     "prepublishOnly": "node -e \"import('./lib/index.js').then(m => { if (m.name !== 'dsh-init' || typeof m.apply !== 'function' || !Array.isArray(m.inject)) { console.error('plugin exports invalid'); process.exit(1); } console.log('plugin load OK:', m.name); }).catch(e => { console.error(e); process.exit(1); })\"",
     "release": "npm version patch && git push --follow-tags"

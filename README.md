@@ -2,6 +2,8 @@
 
 [GitHub](https://github.com/evanfang0054/dsh-init) · [npm](https://www.npmjs.com/package/dsh-init)
 
+[![Test](https://github.com/evanfang0054/dsh-init/actions/workflows/test.yml/badge.svg)](https://github.com/evanfang0054/dsh-init/actions/workflows/test.yml) [![npm](https://img.shields.io/npm/v/dsh-init)](https://www.npmjs.com/package/dsh-init)
+
 给 [DeepSeek Harness（DSH）](https://github.com/deepseek-ai/deepseek-harness) 加上 Claude Code 风格的 **`/init` 命令**的官方机制插件（profile bundle）。
 
 安装后，对 agent 说 `/init` 即可通过「访谈 → 侦查代码库 → 补缺口 → 写文件」的工作流生成：

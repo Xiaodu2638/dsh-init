@@ -1,0 +1,6 @@
+# The dsh-init bundle patch: one insert over the profile composition root.
+# The row loads this package's main entry (lib/index.js) as a host-half
+# Cordis plugin; the plugin registers the model Tool `init`.
+- insert:
+    - id: dsh-init
+      name: dsh-init

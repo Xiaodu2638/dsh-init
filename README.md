@@ -42,7 +42,26 @@ Claude Code 的 `/init` 没有一行"生成逻辑"——它是 `type: 'prompt'` 
 
 ## 安装
 
-本包是一个标准的 **DSH profile bundle**（`package.json` 声明 `dsh.bundle.patch`，与官方 `@deepseek-ai/dsh-base`、社区 `dsh-context` 等插件同一机制）。用 DSH 自带的 `dsh plugin` 命令安装（内部转发 pnpm，并把本包加入 profile 的 bundle 层）：
+本包是一个标准的 **DSH profile bundle**（`package.json` 声明 `dsh.bundle.patch`，与官方 `@deepseek-ai/dsh-base`、社区 `dsh-context` 等插件同一机制）。
+
+安装有两条路径，**取决于你的 DSH 是否带 CLI**：
+
+**A. Desktop 版（没有 `dsh` 命令）—— 用 GUI 或让 agent 代劳**
+
+Desktop 安装（Electron 应用）不注册 `dsh` 命令，不要照着 `dsh plugin` 的文档敲，会得到 "command not found"。改用插件自带的 `plugin_manager` 工具，或等价地打开 **Plugins** 页面操作：
+
+```text
+plugin_manager install_bundle  target: /path/to/dsh-init
+```
+
+从 npm / GitHub 装则把 `target` 换成 `dsh-init@0.2.0` 或 `github:evanfang0054/dsh-init#<commit>`。已装过旧版时须先 `remove_bundle`：
+
+```text
+plugin_manager remove_bundle   target: dsh-init
+plugin_manager install_bundle  target: dsh-init@0.2.0
+```
+
+**B. Web / CLI 版（`dsh` 命令可用）**
 
 ```bash
 # 方式一：从 npm 安装（推荐）
@@ -60,15 +79,11 @@ dsh plugin --profile web add /path/to/dsh-init
 验证安装成功：
 
 ```bash
-cat ~/.dsh/profiles/web/package.json | grep dsh-init
+cat ~/.dsh/profiles/<profile>/package.json | grep dsh-init
 # "dsh.profile.bundles" 数组里出现 "dsh-init" 即已挂载
 ```
 
-卸载：
-
-```bash
-dsh plugin --profile web remove dsh-init
-```
+卸载：`dsh plugin --profile web remove dsh-init`（Desktop 用 `plugin_manager remove_bundle`）。
 
 > 从本地路径安装时，pnpm 会自动以 **link（软链）** 方式挂入——仓库里改完代码，重启 DSH 即生效，无需重新 add。
 
@@ -94,22 +109,34 @@ dsh plugin --profile web remove dsh-init
 
 ## 从 0.1.x 升级
 
-0.1.x 生成的是 `CLAUDE.md` + `AGENTS.md` 软链。升级到 0.2.0 后：
+0.1.x 生成的是 `CLAUDE.md` + `AGENTS.md` 软链。升级到 0.2.0：
 
 ```bash
-dsh plugin --profile desktop add dsh-init@0.2.0
+dsh plugin --profile web add dsh-init@0.2.0   # Desktop 用 plugin_manager remove_bundle + install_bundle
 # 重启 DSH
 ```
 
-然后对已有项目重跑一次 `/init`：它会把 CLAUDE.md（或那条软链）作为迁移输入处理，并把内容落到真正的 `AGENTS.md` 上。想让改动立刻生效而不重跑，也可以手动执行：
+然后对已有项目重跑一次 `/init`：它会把 CLAUDE.md（或那条软链）当作迁移输入，把内容落进真正的 `AGENTS.md`，并询问旧文件如何处理。
+
+不想重跑、只想手动收尾的话，注意**旧软链里的内容仍是 CLAUDE.md 的原文**（含 `# CLAUDE.md` 头），要一并改掉。Windows 未开开发者模式时旧版根本建不出软链，AGENTS.md 会是一份普通副本，此时**两份文件都可能已被单独编辑过，先比对再合并**：
 
 ```bash
-# 软链情形（旧版产物）
-cat AGENTS.md > AGENTS.md.tmp && rm AGENTS.md && mv AGENTS.md.tmp AGENTS.md
-
-# 然后留下真正的 AGENTS.md，CLAUDE.md / 旧软链按需删除
+# 旧软链 / 副本情形（bash）
+cat -A AGENTS.md | head -1        # 确认首行是不是 # CLAUDE.md
+cp -L AGENTS.md AGENTS.md.real    # -L 穿透软链读取
+mv AGENTS.md.real AGENTS.md
 rm CLAUDE.md
 ```
+
+```powershell
+# PowerShell 等价写法
+Get-Content AGENTS.md -TotalCount 1        # 确认首行是不是 # CLAUDE.md
+Copy-Item AGENTS.md AGENTS.md.real -Force  # 目标非软链，直接读实体内容
+Move-Item AGENTS.md.real AGENTS.md -Force
+Remove-Item CLAUDE.md
+```
+
+最后把首行标题 `# CLAUDE.md` 改成 `# AGENTS.md`，并调整开头那段指引文案。
 
 ## 发布新版本（GitHub Actions 自动化）
 

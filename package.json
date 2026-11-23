@@ -1,7 +1,7 @@
 {
   "name": "dsh-init",
   "version": "0.2.0",
-  "description": "Claude Code style /init command for the DeepSeek Harness (DSH): interviews you, surveys the codebase, then generates a minimal AGENTS.md (plus an optional AGENTS.local.md) — and migrates away a deprecated CLAUDE.md.",
+  "description": "Claude Code style /init for DeepSeek Harness (DSH): interviews you, surveys the codebase, then writes a minimal AGENTS.md (plus an optional AGENTS.local.md) and migrates away a deprecated CLAUDE.md.",
   "type": "module",
   "main": "lib/index.js",
   "exports": {
@@ -17,22 +17,26 @@
   "keywords": [
     "dsh",
     "deepseek-harness",
+    "deepseek",
     "cordis",
-    "claude-code",
+    "plugin",
     "init",
     "agents-md",
     "agents-local-md",
-    "coding-agent"
+    "agents",
+    "claude-code",
+    "coding-agent",
+    "ai-coding"
   ],
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/evanfang0054/dsh-init.git"
+    "url": "git+https://github.com/Xiaodu2638/dsh-init.git"
   },
   "bugs": {
-    "url": "https://github.com/evanfang0054/dsh-init/issues"
+    "url": "https://github.com/Xiaodu2638/dsh-init/issues"
   },
-  "homepage": "https://github.com/evanfang0054/dsh-init#readme",
+  "homepage": "https://github.com/Xiaodu2638/dsh-init#readme",
   "scripts": {
     "prepublishOnly": "node -e \"import('./lib/index.js').then(m => { if (m.name !== 'dsh-init' || typeof m.apply !== 'function' || !Array.isArray(m.inject)) { console.error('plugin exports invalid'); process.exit(1); } console.log('plugin load OK:', m.name); }).catch(e => { console.error(e); process.exit(1); })\"",
     "release": "npm version patch && git push --follow-tags"

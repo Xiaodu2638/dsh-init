@@ -1,7 +1,7 @@
 {
   "name": "dsh-init",
-  "version": "0.1.2",
-  "description": "Claude Code style /init command for the DeepSeek Harness (DSH): generates a minimal CLAUDE.md and links AGENTS.md to it as a relative symlink.",
+  "version": "0.2.0",
+  "description": "Claude Code style /init command for the DeepSeek Harness (DSH): interviews you, surveys the codebase, then generates a minimal AGENTS.md (plus an optional AGENTS.local.md) — and migrates away a deprecated CLAUDE.md.",
   "type": "module",
   "main": "lib/index.js",
   "exports": {
@@ -20,8 +20,8 @@
     "cordis",
     "claude-code",
     "init",
-    "claude-md",
     "agents-md",
+    "agents-local-md",
     "coding-agent"
   ],
   "license": "MIT",

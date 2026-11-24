@@ -1,5 +1,26 @@
 # Changelog
 
+## 0.2.1 — 2026-11-24
+
+- New: **Phase 1 also asks which language to reply in.** One `ask_user_question`
+  call now carries both the scope question and the language question, so the
+  interview does not get longer.
+- The answer constrains **visible answers only** — questions, diff explanations,
+  the final summary — never the model's reasoning/thinking language.
+- A named language adds one `## Communication` line to AGENTS.md whose second
+  clause pins that boundary explicitly (`Reasoning/thinking may use any
+  language; this concerns visible answers, not internal reasoning.`). The line is
+  written in English regardless of the target language, so every agent reading
+  AGENTS.md parses the constraint the same way.
+- The default, "Match my messages", writes **nothing** into AGENTS.md: agents
+  already follow the conversation's language, so a line restating it would be
+  noise.
+- A reasoning/thinking language is deliberately never recorded in AGENTS.md —
+  instruction files do not control it, and a line claiming to would be false.
+- Identifiers, paths, commands, URLs and error text stay verbatim in every case.
+- Phase 7 now reports what happened to the language answer (recorded, or
+  deliberately not recorded).
+
 ## 0.2.0 — 2026-11-23
 
 - **BREAKING (behavior): the workflow now produces `AGENTS.md`, not

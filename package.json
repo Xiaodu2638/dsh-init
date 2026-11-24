@@ -1,7 +1,7 @@
 {
   "name": "dsh-init",
-  "version": "0.2.0",
-  "description": "Claude Code style /init for DeepSeek Harness (DSH): interviews you, surveys the codebase, then writes a minimal AGENTS.md (plus an optional AGENTS.local.md) and migrates away a deprecated CLAUDE.md.",
+  "version": "0.2.1",
+  "description": "Claude Code style /init for DeepSeek Harness (DSH): interviews you (scope + reply language), surveys the codebase, then writes a minimal AGENTS.md (plus an optional AGENTS.local.md) and migrates away a deprecated CLAUDE.md.",
   "type": "module",
   "main": "lib/index.js",
   "exports": {

@@ -38,13 +38,29 @@ Claude Code 的 `/init` 没有一行「生成逻辑」——它是 `type: 'promp
 
 | 阶段 | 内容 |
 | --- | --- |
-| 1 访谈 | 问范围：项目 AGENTS.md / 个人 AGENTS.local.md / 两者 |
+| 1 访谈 | 一次询问两件事：范围（项目 AGENTS.md / 个人 AGENTS.local.md / 两者）+ **回复语言** |
 | 2 侦查 | 读 manifest、README、CI、已有的 AGENTS.md / 旧 CLAUDE.md / .cursor rules 等 |
 | 3 补缺口 | 只问代码答不了的问题，不标「推荐」 |
-| 4 写 AGENTS.md | 每行过「删掉会导致 agent 犯错吗」测试；已有文件走 diff 不覆盖 |
+| 4 写 AGENTS.md | 每行过「删掉会导致 agent 犯错吗」测试；已有文件走 diff 不覆盖；指名语言时写一行 Communication |
 | 5 退役 CLAUDE.md | 仅在存在时触发：有效内容并入 AGENTS.md → 询问删除 / 保留 / 改成指针 |
 | 6 AGENTS.local.md | 可选个人偏好文件 + 自动加 .gitignore |
-| 7 总结 | 回顾产物，说明 CLAUDE.md 的去向，提醒可随时重跑 |
+| 7 总结 | 回顾产物，说明 CLAUDE.md 去向与语言选择的结果，提醒可随时重跑 |
+
+### 回复语言：只管回答，不管思考
+
+第 1 阶段的访谈会一并询问**回复用什么语言**。这个选择只约束**你看到的回答**——提问、改动说明、总结——不涉及模型的思维链（reasoning）语言。
+
+- **默认「跟随我的消息」**：什么都不写进 AGENTS.md。agent 本来就会跟随对话语言，写一行反而是噪声。
+- **指名语言**（如简体中文）：在 AGENTS.md 里加一节，且措辞明确把约束限定在回答上：
+
+  ```markdown
+  ## Communication
+  - Reply in 简体中文. Reasoning/thinking may use any language; this concerns visible answers, not internal reasoning.
+  ```
+
+  第二句不是装饰。光写「用中文回复」常被后续读到这份文件的 agent 过度解读成「连思考也用中文」,所以这里把边界写死;而且这一行固定用英文表述,让读 AGENTS.md 的任何 agent 都能准确理解。
+
+思维链语言本身**不会**被写进 AGENTS.md:它是按会话、按模型走的，指令文件管不到它,写进去只会让仓库里的事实来源出现一句假话。标识符、路径、命令、URL、报错文本在任何情况下都保持原文。
 
 ## 安装
 
